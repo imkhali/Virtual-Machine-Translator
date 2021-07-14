@@ -3,6 +3,7 @@ package Model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,16 +22,16 @@ public class Parser {
 
     public Parser(String vmFilePath) {
         this.vmFilePath = vmFilePath;
+        this.vmCommands = new LinkedList<>();
         this.readCommandsFromFile();
     }
 
     private void readCommandsFromFile() {
-        vmCommands = new ArrayList<>();
         try {
             File vmFile = new File(this.vmFilePath);
-            Scanner testFileScanner = new Scanner(vmFile);
-            while(testFileScanner.hasNextLine()) {
-                String currentCommand = testFileScanner.nextLine().strip();
+            Scanner vmFileScanner = new Scanner(vmFile);
+            while(vmFileScanner.hasNextLine()) {
+                String currentCommand = vmFileScanner.nextLine().strip();
                 if (currentCommand.length() == 0 || currentCommand.startsWith("//")) continue;
                 vmCommands.add(currentCommand);
             }

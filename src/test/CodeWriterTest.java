@@ -18,7 +18,7 @@ public class CodeWriterTest {
     @Test
     public void testConstructor() {
         assertNotNull(testCodeWriter);
-        assertEquals(testFilePath, testCodeWriter.getAsmFile());
+        assertEquals(testFilePath, testCodeWriter.getAsmFilePath());
     }
 
     @Test

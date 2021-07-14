@@ -18,6 +18,7 @@ public class Main {
         CodeWriter codeWriter = new CodeWriter(asmFilePath);
 
         while (parser.hasMoreCommands()) {
+            parser.advance();
             switch (parser.getCurrentCommandType()) {
                 case C_ARITHMETIC:
                     codeWriter.writeArithmetic(parser.getCurrentCommandArg1());
@@ -31,7 +32,7 @@ public class Main {
                 default:
                     break;
             }
-            parser.advance();
         }
+        codeWriter.close();
     }
 }
