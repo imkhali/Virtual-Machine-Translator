@@ -24,6 +24,24 @@ public class CodeWriter {
         return asmFilePath;
     }
 
+    private void writeToAsmFile() {
+        try {
+            FileWriter asmFile = new FileWriter(this.asmFilePath);
+            for (String asmStatement : this.bufferCommands)
+                asmFile.write(asmStatement + LINE_SEPARATOR);
+            asmFile.close();
+            System.out.println("Successfully wrote to the file. " + asmFilePath);
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+    }
+
+    public void close() {
+        writeToAsmFile();
+    }
+
     // EFFECTS: write to asmFile the assembly code that implements the given push/pop command
     public void writePushPop(CommandType commandType, String segment, int index) {
         switch (commandType) {
@@ -291,21 +309,17 @@ public class CodeWriter {
         return "Label" + (currentLabelIndex++);
     }
 
-    private void writeToAsmFile() {
-        try {
-            FileWriter asmFile = new FileWriter(this.asmFilePath);
-            for (String asmStatement : this.bufferCommands)
-                asmFile.write(asmStatement + LINE_SEPARATOR);
-            asmFile.close();
-            System.out.println("Successfully wrote to the file. " + asmFilePath);
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-
+    public void writeGoto(String label) {
+        bufferCommands.add("@" + label);
     }
 
-    public void close() {
-        writeToAsmFile();
+    public void writeLabel(String label) {
+        bufferCommands.add("(" + label + ")");
+    }
+
+    public void writeIF(String label) {
+        popToD();
+        bufferCommands.add("@" + label);
+        bufferCommands.add("D:JLT");
     }
 }

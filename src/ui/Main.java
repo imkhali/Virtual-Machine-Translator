@@ -29,6 +29,15 @@ public class Main {
                 case C_POP:
                     codeWriter.writePushPop(CommandType.C_POP, parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
                     break;
+                case C_LABEL:
+                    codeWriter.writeLabel(parser.getCurrentCommandArg1());
+                    break;
+                case C_GOTO:
+                    codeWriter.writeGoto(parser.getCurrentCommandArg1());
+                    break;
+                case C_IF:
+                    codeWriter.writeIF(parser.getCurrentCommandArg1()); // if first stack pop is true (previous command)
+                    break;
                 default:
                     break;
             }

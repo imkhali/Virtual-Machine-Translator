@@ -12,6 +12,7 @@ import java.util.Scanner;
  * TODO: Refactor to make command a separate class with fields: string, type, arg1, arg2
  */
 public class Parser {
+    public static final String INLINE_COMMENT_PATTERN = "\\s*//.*";
     private final String vmFilePath;
     private List<String> vmCommands;
 
@@ -33,6 +34,7 @@ public class Parser {
             while(vmFileScanner.hasNextLine()) {
                 String currentCommand = vmFileScanner.nextLine().strip();
                 if (currentCommand.length() == 0 || currentCommand.startsWith("//")) continue;
+                currentCommand = currentCommand.replaceFirst(INLINE_COMMENT_PATTERN, ""); // inline comments
                 vmCommands.add(currentCommand);
             }
         } catch (FileNotFoundException e) {
@@ -70,7 +72,7 @@ public class Parser {
     // EFFECTS: parses the currentCommand into its constituent parts
     private void parse() {
         if (currentCommandString != null) {
-            String[] tokens = currentCommandString.split(" ");
+            String[] tokens = currentCommandString.split(" "); // TODO: assume single space between tokens, relax.
             switch(tokens[0]) {
                 case "push":
                     currentCommandType = CommandType.C_PUSH;
@@ -93,6 +95,21 @@ public class Parser {
                 case "not":
                     currentCommandType = CommandType.C_ARITHMETIC;
                     currentCommandArg1 = tokens[0];
+                    currentCommandArg2 = null;
+                    break;
+                case "label":
+                    currentCommandType = CommandType.C_LABEL;
+                    currentCommandArg1 = tokens[1];
+                    currentCommandArg2 = null;
+                    break;
+                case "goto":
+                    currentCommandType = CommandType.C_GOTO;
+                    currentCommandArg1 = tokens[1];
+                    currentCommandArg2 = null;
+                    break;
+                case "if-goto":
+                    currentCommandType = CommandType.C_IF;
+                    currentCommandArg1 = tokens[1];
                     currentCommandArg2 = null;
                     break;
                 default:
