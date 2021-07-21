@@ -23,17 +23,22 @@ public class Main {
         String asmFilePath;
         List<String> vmFiles = new ArrayList<>();
 
+        boolean writeInit = false;
         if (vmFile.isFile()) {
             asmFilePath = vmFile.getAbsolutePath().replace(".vm", ".asm");
             vmFiles.add(vmFile.getPath());
         } else if (vmFile.isDirectory()) {
             asmFilePath = vmFile.getAbsolutePath() + "\\" + vmFile.getName() + ".asm";
             vmFiles = getVMFiles(vmFile.getPath());
+            writeInit = true;
         } else {
             throw new RuntimeException("I/O Error, please enter a valid file or directory name");
         }
 
         CodeWriter codeWriter = new CodeWriter(asmFilePath);
+        if (writeInit) {
+            codeWriter.writeInit();
+        }
         for (String vmFilePath : vmFiles) {
             Parser parser = new Parser(vmFilePath);
             codeWriter.setFileName(vmFilePath);

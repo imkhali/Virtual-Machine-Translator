@@ -16,7 +16,7 @@ public class CodeWriter {
     public static int currentLabelIndex = 0;
     public static int currentReturnLabelIndex = 0;
 
-    private String asmFilePath;
+    private final String asmFilePath;
 
     private String currentVMFilePath;
     private String fileBaseName;
@@ -27,7 +27,6 @@ public class CodeWriter {
     public CodeWriter(String asmFile) {
         this.asmFilePath = asmFile;
         this.bufferCommands = new LinkedList<>();
-        this.writeInit();
     }
 
     public String getAsmFilePath() {
@@ -286,32 +285,18 @@ public class CodeWriter {
     }
 
     private void sEq() {
-        String firstLabel = getNextLabel();
-        String secondLabel = getNextLabel();
-        bufferCommands.add("@SP");
-        bufferCommands.add("AM=M-1");
-        bufferCommands.add("D=M");
-        bufferCommands.add("A=A-1");
-        bufferCommands.add("D=M-D");
-        bufferCommands.add("@" + firstLabel);
-        bufferCommands.add("D;JEQ");
-        pushFromDTrueOrFalse(firstLabel, secondLabel);
+        jumpIfCondition("JEQ");
     }
 
     private void sLt() {
-        String firstLabel = getNextLabel();
-        String secondLabel = getNextLabel();
-        bufferCommands.add("@SP");
-        bufferCommands.add("AM=M-1");
-        bufferCommands.add("D=M");
-        bufferCommands.add("A=A-1");
-        bufferCommands.add("D=M-D");
-        bufferCommands.add("@" + firstLabel);
-        bufferCommands.add("D;JLT");
-        pushFromDTrueOrFalse(firstLabel, secondLabel);
+        jumpIfCondition("JLT");
     }
 
     private void sGt() {
+        jumpIfCondition("JGT");
+    }
+
+    private void jumpIfCondition(String jump) {
         String firstLabel = getNextLabel();
         String secondLabel = getNextLabel();
         bufferCommands.add("@SP");
@@ -320,7 +305,7 @@ public class CodeWriter {
         bufferCommands.add("A=A-1");
         bufferCommands.add("D=M-D");
         bufferCommands.add("@" + firstLabel);
-        bufferCommands.add("D;JGT");
+        bufferCommands.add("D;" + jump);
         pushFromDTrueOrFalse(firstLabel, secondLabel);
     }
 
