@@ -1,7 +1,7 @@
 package test;
 
-import Model.CommandType;
-import Model.Parser;
+import model.CommandType;
+import model.Parser;
 import org.junit.Before;
 import org.junit.Test;
 

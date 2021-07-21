@@ -1,8 +1,7 @@
-package Model;
+package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -110,6 +109,21 @@ public class Parser {
                 case "if-goto":
                     currentCommandType = CommandType.C_IF;
                     currentCommandArg1 = tokens[1];
+                    currentCommandArg2 = null;
+                    break;
+                case "call":
+                    currentCommandType = CommandType.C_CALL;
+                    currentCommandArg1 = tokens[1];
+                    currentCommandArg2 = Integer.parseInt(tokens[2]);
+                    break;
+                case "function":
+                    currentCommandType = CommandType.C_FUNCTION;
+                    currentCommandArg1 = tokens[1];
+                    currentCommandArg2 = Integer.parseInt(tokens[2]);
+                    break;
+                case "return":
+                    currentCommandType = CommandType.C_RETURN;
+                    currentCommandArg1 = null;
                     currentCommandArg2 = null;
                     break;
                 default:

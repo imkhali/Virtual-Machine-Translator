@@ -1,6 +1,6 @@
 package test;
 
-import Model.CodeWriter;
+import model.CodeWriter;
 import org.junit.Before;
 import org.junit.Test;
 

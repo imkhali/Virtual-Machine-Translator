@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,19 +9,39 @@ import static java.lang.System.getProperty;
 
 public class CodeWriter {
     public static final String LINE_SEPARATOR = getProperty("line.separator");
+
     public static final int THIS = 3;
     public static final int TEMP = 5;
+
     public static int currentLabelIndex = 0;
-    private final String asmFilePath;
+    public static int currentReturnLabelIndex = 0;
+
+    private String asmFilePath;
+
+    private String currentVMFilePath;
+    private String fileBaseName;
+    private String labelPrefix = "";
+
     private final List<String> bufferCommands;
 
     public CodeWriter(String asmFile) {
         this.asmFilePath = asmFile;
         this.bufferCommands = new LinkedList<>();
+        this.writeInit();
     }
 
     public String getAsmFilePath() {
         return asmFilePath;
+    }
+
+    // the current vm File we are working on
+    public void setFileName(String currentVMFilePath) {
+        this.currentVMFilePath = currentVMFilePath;
+        this.fileBaseName = extractBaseName();
+    }
+
+    private String extractBaseName() {
+        return currentVMFilePath.replaceAll("^.*[/\\\\]", "").split("\\.")[0];
     }
 
     private void writeToAsmFile() {
@@ -40,6 +60,18 @@ public class CodeWriter {
 
     public void close() {
         writeToAsmFile();
+    }
+
+    // write the assembly instructions for bootstrap code
+    public void writeInit() {
+        /* *SP = 256 */
+        bufferCommands.add("@256");
+        bufferCommands.add("D=A");
+        bufferCommands.add("@SP");
+        bufferCommands.add("M=D");
+
+        /* call Sys.init */
+        writeCall("Sys.init", 0);
     }
 
     // EFFECTS: write to asmFile the assembly code that implements the given push/pop command
@@ -64,25 +96,25 @@ public class CodeWriter {
                 writePushConstant(index);
                 break;
             case "local":
-                writePushSegment("@LCL", index);
+                writePushSegment("LCL", index);
                 break;
             case "argument":
-                writePushSegment("@ARG", index);
+                writePushSegment("ARG", index);
                 break;
             case "this":
-                writePushSegment("@THIS", index);
+                writePushSegment("THIS", index);
                 break;
             case "that":
-                writePushSegment("@THAT", index);
+                writePushSegment("THAT", index);
                 break;
             case "static":
-                writePushOtherSegment("@Foo." + index);
+                writePushOtherSegment(fileBaseName + "." + index);
                 break;
             case "temp":
-                writePushOtherSegment("@R" + (index + TEMP));
+                writePushOtherSegment("R" + (index + TEMP));
                 break;
             case "pointer":
-                writePushOtherSegment("@R" + (index + THIS));
+                writePushOtherSegment("R" + (index + THIS));
                 break;
             default:
                 throw new RuntimeException("Got wrong command: expected push or pop");
@@ -112,7 +144,7 @@ public class CodeWriter {
     }
 
     private void writePushOtherSegment(String address) {
-        bufferCommands.add(address);
+        bufferCommands.add("@" + address);
         bufferCommands.add("D=M");
         pushFromD();
     }
@@ -120,25 +152,25 @@ public class CodeWriter {
     private void writePop(String segment, int index) {
         switch (segment) {
             case "local":
-                writePopSegment("@LCL", index);
+                writePopSegment("LCL", index);
                 break;
             case "argument":
-                writePopSegment("@ARG", index);
+                writePopSegment("ARG", index);
                 break;
             case "this":
-                writePopSegment("@THIS", index);
+                writePopSegment("THIS", index);
                 break;
             case "that":
-                writePopSegment("@THAT", index);
+                writePopSegment("THAT", index);
                 break;
             case "static":
-                writePopOtherSegment("@Foo." + index);
+                writePopOtherSegment(fileBaseName + "." + index);
                 break;
             case "temp":
-                writePopOtherSegment("@R" + (index + TEMP));
+                writePopOtherSegment("R" + (index + TEMP));
                 break;
             case "pointer":
-                writePopOtherSegment("@R" + (index + THIS));
+                writePopOtherSegment("R" + (index + THIS));
                 break;
             default:
                 throw new RuntimeException("Got wrong command: expected push or pop");
@@ -150,17 +182,17 @@ public class CodeWriter {
         bufferCommands.add("D=M");
         bufferCommands.add("@" + index);
         bufferCommands.add("D=D+A");
-        bufferCommands.add("@tmp");
+        bufferCommands.add("@R13");
         bufferCommands.add("M=D");
         popToD();
-        bufferCommands.add("@tmp");
+        bufferCommands.add("@R13");
         bufferCommands.add("A=M");
         bufferCommands.add("M=D");
     }
 
     private void writePopOtherSegment(String address) {
         popToD();
-        bufferCommands.add(address);
+        bufferCommands.add("@" + address);
         bufferCommands.add("M=D");
     }
 
@@ -244,7 +276,7 @@ public class CodeWriter {
         bufferCommands.add("AM=M-1");
         bufferCommands.add("D=M");
         bufferCommands.add("A=A-1");
-        bufferCommands.add("M=D-M");
+        bufferCommands.add("M=M-D");
     }
 
     private void sNeg() {
@@ -306,20 +338,159 @@ public class CodeWriter {
     }
 
     private String getNextLabel() {
-        return "Label" + (currentLabelIndex++);
+        return labelPrefix + "Label" + (currentLabelIndex++);
     }
 
     public void writeGoto(String label) {
         bufferCommands.add("@" + label);
+        bufferCommands.add("0;JMP");
     }
 
     public void writeLabel(String label) {
+        bufferCommands.add("// label " + label); // TODO: same as above
         bufferCommands.add("(" + label + ")");
     }
 
     public void writeIF(String label) {
+        bufferCommands.add("// if-goto " + label); // TODO: same as above
         popToD();
         bufferCommands.add("@" + label);
-        bufferCommands.add("D:JLT");
+        bufferCommands.add("D;JNE");
+    }
+
+    public void writeCall(String functionName, Integer nArgs) {
+
+        bufferCommands.add("// call " + functionName);
+
+        /**
+         * Pushing the caller state
+         */
+        /* push returnAddress */
+        String returnAddress = getNextLabel();
+        bufferCommands.add("@" + returnAddress);
+        bufferCommands.add("D=A");
+        pushFromD();
+
+        /* save segment address */
+        saveSegmentAddress("LCL");
+        saveSegmentAddress("ARG");
+        saveSegmentAddress("THIS");
+        saveSegmentAddress("THAT");
+
+        /**
+         * Setting up for the callee
+         */
+        /* reposition ARG */
+        bufferCommands.add("@SP");
+        bufferCommands.add("D=M");
+        bufferCommands.add("@" + (5 + nArgs));
+        bufferCommands.add("D=D-A");
+        bufferCommands.add("@ARG");
+        bufferCommands.add("M=D");
+
+        /* reposition LCL */
+        bufferCommands.add("@SP");
+        bufferCommands.add("D=M");
+        bufferCommands.add("@LCL");
+        bufferCommands.add("M=D");
+
+        /**
+         * jumping to functionName
+         */
+        /* goto functionName */
+        writeGoto(functionName);
+
+        /* Declares a label for the return address */
+        bufferCommands.add("(" + returnAddress + ")");
+    }
+
+    private void saveSegmentAddress(String segmentBaseAddress) {
+        bufferCommands.add("@" + segmentBaseAddress);
+        bufferCommands.add("D=M");
+        pushFromD();
+    }
+
+    private String getNextReturnLabel(String functionName) {
+        return functionName + "$ret." + (currentReturnLabelIndex++);
+    }
+
+    public void writeFunction(String functionName, Integer nVars) {
+        labelPrefix = functionName + "$";
+        bufferCommands.add("// function " + functionName + " " + nVars);
+
+        /* Entry point for the function */
+        bufferCommands.add("(" + functionName + ")");
+
+        /* Initialize local variables as zeros */
+        bufferCommands.add("D=0");
+        for (int i = 0; i < nVars; i++) {
+            pushFromD();
+        }
+    }
+
+    public void writeReturn() {
+        bufferCommands.add("// return");
+
+        /* R13 = LCL */
+        bufferCommands.add("@LCL");
+        bufferCommands.add("D=M");
+        bufferCommands.add("@R13");
+        bufferCommands.add("M=D");
+
+        /* R14 = *(endFrame - 5)  - caller state is 4 segments + retAddress */
+        bufferCommands.add("@5");
+        bufferCommands.add("A=D-A");
+        bufferCommands.add("D=M");
+        bufferCommands.add("@R14");
+        bufferCommands.add("M=D");
+
+        /* *ARG = pop()  - argument 0 is replaced with return value */
+        popToD();
+        bufferCommands.add("@ARG");
+        bufferCommands.add("A=M");
+        bufferCommands.add("M=D");
+
+        /**
+         * reposition the caller's segments (state)
+         */
+        /* SP = ARG + 1 */
+        bufferCommands.add("@ARG");
+        bufferCommands.add("D=M+1");
+        bufferCommands.add("@SP");
+        bufferCommands.add("M=D");
+
+        /* THAT = *(endFrame - 1) */
+        bufferCommands.add("@R13");
+        bufferCommands.add("AM=M-1");
+        bufferCommands.add("D=M");
+        bufferCommands.add("@THAT");
+        bufferCommands.add("M=D");
+
+        /* THIS = *(endFrame - 2) */
+        bufferCommands.add("@R13");
+        bufferCommands.add("AM=M-1");
+        bufferCommands.add("D=M");
+        bufferCommands.add("@THIS");
+        bufferCommands.add("M=D");
+
+        /* ARG = *(endFrame - 3) */
+        bufferCommands.add("@R13");
+        bufferCommands.add("AM=M-1");
+        bufferCommands.add("D=M");
+        bufferCommands.add("@ARG");
+        bufferCommands.add("M=D");
+
+        /* LCL = *(endFrame - 4) */
+        bufferCommands.add("@R13");
+        bufferCommands.add("AM=M-1");
+        bufferCommands.add("D=M");
+        bufferCommands.add("@LCL");
+        bufferCommands.add("M=D");
+
+        /* goto retAddress */
+        bufferCommands.add("@R14");
+        bufferCommands.add("A=M");
+        bufferCommands.add("0;JMP");
+        this.labelPrefix = "";
     }
 }
