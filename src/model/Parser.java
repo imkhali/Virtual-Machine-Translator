@@ -72,62 +72,53 @@ public class Parser {
     private void parse() {
         if (currentCommandString != null) {
             String[] tokens = currentCommandString.split(" "); // TODO: assume single space between tokens, relax.
-            switch(tokens[0]) {
-                case "push":
+            switch (tokens[0]) {
+                case "push" -> {
                     currentCommandType = CommandType.C_PUSH;
                     currentCommandArg1 = tokens[1];
                     currentCommandArg2 = Integer.parseInt(tokens[2]);
-                    break;
-                case "pop":
+                }
+                case "pop" -> {
                     currentCommandType = CommandType.C_POP;
                     currentCommandArg1 = tokens[1];
                     currentCommandArg2 = Integer.parseInt(tokens[2]);
-                    break;
-                case "add":
-                case "sub":
-                case "neg":
-                case "eq":
-                case "gt":
-                case "lt":
-                case "and":
-                case "or":
-                case "not":
+                }
+                case "add", "sub", "neg", "eq", "gt", "lt", "and", "or", "not" -> {
                     currentCommandType = CommandType.C_ARITHMETIC;
                     currentCommandArg1 = tokens[0];
                     currentCommandArg2 = null;
-                    break;
-                case "label":
+                }
+                case "label" -> {
                     currentCommandType = CommandType.C_LABEL;
                     currentCommandArg1 = tokens[1];
                     currentCommandArg2 = null;
-                    break;
-                case "goto":
+                }
+                case "goto" -> {
                     currentCommandType = CommandType.C_GOTO;
                     currentCommandArg1 = tokens[1];
                     currentCommandArg2 = null;
-                    break;
-                case "if-goto":
+                }
+                case "if-goto" -> {
                     currentCommandType = CommandType.C_IF;
                     currentCommandArg1 = tokens[1];
                     currentCommandArg2 = null;
-                    break;
-                case "call":
+                }
+                case "call" -> {
                     currentCommandType = CommandType.C_CALL;
                     currentCommandArg1 = tokens[1];
                     currentCommandArg2 = Integer.parseInt(tokens[2]);
-                    break;
-                case "function":
+                }
+                case "function" -> {
                     currentCommandType = CommandType.C_FUNCTION;
                     currentCommandArg1 = tokens[1];
                     currentCommandArg2 = Integer.parseInt(tokens[2]);
-                    break;
-                case "return":
+                }
+                case "return" -> {
                     currentCommandType = CommandType.C_RETURN;
                     currentCommandArg1 = null;
                     currentCommandArg2 = null;
-                    break;
-                default:
-                    throw new RuntimeException("\"" + currentCommandString + "\" is not a valid VM command!");
+                }
+                default -> throw new RuntimeException("\"" + currentCommandString + "\" is not a valid VM command!");
             }
         }
     }

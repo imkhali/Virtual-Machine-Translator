@@ -14,7 +14,6 @@ public class CodeWriter {
     public static final int TEMP = 5;
 
     public static int currentLabelIndex = 0;
-    public static int currentReturnLabelIndex = 0;
 
     private final String asmFilePath;
 
@@ -76,47 +75,29 @@ public class CodeWriter {
     // EFFECTS: write to asmFile the assembly code that implements the given push/pop command
     public void writePushPop(CommandType commandType, String segment, int index) {
         switch (commandType) {
-            case C_PUSH:
+            case C_PUSH -> {
                 bufferCommands.add("// push " + segment + " " + index);
                 writePush(segment, index);
-                break;
-            case C_POP:
+            }
+            case C_POP -> {
                 bufferCommands.add("// pop " + segment + " " + index);
                 writePop(segment, index);
-                break;
-            default:
-                throw new RuntimeException("Got wrong command: expected push or pop");
+            }
+            default -> throw new RuntimeException("Got wrong command: expected push or pop");
         }
     }
 
     private void writePush(String segment, int index) {
         switch (segment) {
-            case "constant":
-                writePushConstant(index);
-                break;
-            case "local":
-                writePushSegment("LCL", index);
-                break;
-            case "argument":
-                writePushSegment("ARG", index);
-                break;
-            case "this":
-                writePushSegment("THIS", index);
-                break;
-            case "that":
-                writePushSegment("THAT", index);
-                break;
-            case "static":
-                writePushOtherSegment(fileBaseName + "." + index);
-                break;
-            case "temp":
-                writePushOtherSegment("R" + (index + TEMP));
-                break;
-            case "pointer":
-                writePushOtherSegment("R" + (index + THIS));
-                break;
-            default:
-                throw new RuntimeException("Got wrong command: expected push or pop");
+            case "constant" -> writePushConstant(index);
+            case "local" -> writePushSegment("LCL", index);
+            case "argument" -> writePushSegment("ARG", index);
+            case "this" -> writePushSegment("THIS", index);
+            case "that" -> writePushSegment("THAT", index);
+            case "static" -> writePushOtherSegment(fileBaseName + "." + index);
+            case "temp" -> writePushOtherSegment("R" + (index + TEMP));
+            case "pointer" -> writePushOtherSegment("R" + (index + THIS));
+            default -> throw new RuntimeException("Got wrong command: expected push or pop");
         }
     }
 
@@ -150,29 +131,14 @@ public class CodeWriter {
 
     private void writePop(String segment, int index) {
         switch (segment) {
-            case "local":
-                writePopSegment("LCL", index);
-                break;
-            case "argument":
-                writePopSegment("ARG", index);
-                break;
-            case "this":
-                writePopSegment("THIS", index);
-                break;
-            case "that":
-                writePopSegment("THAT", index);
-                break;
-            case "static":
-                writePopOtherSegment(fileBaseName + "." + index);
-                break;
-            case "temp":
-                writePopOtherSegment("R" + (index + TEMP));
-                break;
-            case "pointer":
-                writePopOtherSegment("R" + (index + THIS));
-                break;
-            default:
-                throw new RuntimeException("Got wrong command: expected push or pop");
+            case "local" -> writePopSegment("LCL", index);
+            case "argument" -> writePopSegment("ARG", index);
+            case "this" -> writePopSegment("THIS", index);
+            case "that" -> writePopSegment("THAT", index);
+            case "static" -> writePopOtherSegment(fileBaseName + "." + index);
+            case "temp" -> writePopOtherSegment("R" + (index + TEMP));
+            case "pointer" -> writePopOtherSegment("R" + (index + THIS));
+            default -> throw new RuntimeException("Got wrong command: expected push or pop");
         }
     }
 
@@ -205,36 +171,16 @@ public class CodeWriter {
     public void writeArithmetic(String command) {
         bufferCommands.add("// " + command);
         switch (command) {
-            case "add":
-                sAdd();
-                break;
-            case "sub":
-                sSub();
-                break;
-            case "neg":
-                sNeg();
-                break;
-            case "and":
-                sAnd();
-                break;
-            case "or":
-                sOr();
-                break;
-            case "not":
-                sNot();
-                break;
-            case "gt":
-                sGt();
-                break;
-            case "lt":
-                sLt();
-                break;
-            case "eq":
-                sEq();
-                break;
-            default:
-                throw new RuntimeException("Got wrong arithmetic function");
-
+            case "add" -> sAdd();
+            case "sub" -> sSub();
+            case "neg" -> sNeg();
+            case "and" -> sAnd();
+            case "or" -> sOr();
+            case "not" -> sNot();
+            case "gt" -> sGt();
+            case "lt" -> sLt();
+            case "eq" -> sEq();
+            default -> throw new RuntimeException("Got wrong arithmetic function");
         }
     }
 
@@ -393,10 +339,6 @@ public class CodeWriter {
         bufferCommands.add("@" + segmentBaseAddress);
         bufferCommands.add("D=M");
         pushFromD();
-    }
-
-    private String getNextReturnLabel(String functionName) {
-        return functionName + "$ret." + (currentReturnLabelIndex++);
     }
 
     public void writeFunction(String functionName, Integer nVars) {
