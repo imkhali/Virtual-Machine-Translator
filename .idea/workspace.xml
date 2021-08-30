@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7612a25c-b5bb-42a3-aa63-de982f00deb9" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="932cd71e-4cb8-48a2-8231-af62f2078e6a" />
+        <option name="url" value="https://github.com/imkhali/Virtual-Machine-Translator.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="ProjectId" id="1vZnLhCyi1Ogt2Br6qs4nwitYV9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JAVA" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="terminal" />
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ui.Main" />
+      <module name="VMTranslator" />
+      <option name="PROGRAM_PARAMETERS" value="&quot;C:\Users\khalil\OneDrive - Deakin University\PhD Project\Programming\CSDegree\019_020_NAND_TETRIS\projects\08\FunctionCalls\StaticsTest&quot;" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CodeWriterTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="VMTranslator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="test" />
+      <option name="MAIN_CLASS_NAME" value="test.CodeWriterTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Scratch" type="Java Scratch" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Scratch" />
+      <option name="SCRATCH_FILE_URL" value="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Java Scratch.Scratch" />
+      <item itemvalue="JUnit.CodeWriterTest" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Java Scratch.Scratch" />
+        <item itemvalue="JUnit.CodeWriterTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7612a25c-b5bb-42a3-aa63-de982f00deb9" name="Default Changelist" comment="" />
+      <created>1626778423640</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1626778423640</updated>
+      <workItem from="1626778425822" duration="2381000" />
+      <workItem from="1626780851461" duration="15000" />
+      <workItem from="1626784043979" duration="19569000" />
+      <workItem from="1626806340133" duration="10335000" />
+      <workItem from="1626816976479" duration="1284000" />
+      <workItem from="1626844339175" duration="8118000" />
+      <workItem from="1626894842456" duration="334000" />
+      <workItem from="1627247150533" duration="720000" />
+      <workItem from="1627489248980" duration="1589000" />
+      <workItem from="1627576403047" duration="1483000" />
+      <workItem from="1627578050520" duration="55000" />
+      <workItem from="1628166372836" duration="5350000" />
+      <workItem from="1628188091249" duration="644000" />
+      <workItem from="1628217775322" duration="34000" />
+      <workItem from="1628227004423" duration="4050000" />
+      <workItem from="1628231126321" duration="289000" />
+      <workItem from="1628254127511" duration="627000" />
+      <workItem from="1628255541374" duration="592000" />
+      <workItem from="1628328012853" duration="1114000" />
+      <workItem from="1628424394157" duration="2000" />
+      <workItem from="1628476036249" duration="4000" />
+      <workItem from="1628599008454" duration="13000" />
+      <workItem from="1628950343455" duration="58000" />
+      <workItem from="1629454639264" duration="77000" />
+      <workItem from="1629465645086" duration="36000" />
+      <workItem from="1629472653349" duration="360000" />
+      <workItem from="1630078599382" duration="1453000" />
+      <workItem from="1630284846559" duration="247000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+</project>
