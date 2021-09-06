@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7612a25c-b5bb-42a3-aa63-de982f00deb9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VMTranslator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/VMTranslator.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +39,10 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -137,6 +142,9 @@
       <workItem from="1629472653349" duration="360000" />
       <workItem from="1630078599382" duration="1453000" />
       <workItem from="1630284846559" duration="247000" />
+      <workItem from="1630297712222" duration="20000" />
+      <workItem from="1630885380057" duration="210000" />
+      <workItem from="1630885798307" duration="580000" />
     </task>
     <servers />
   </component>
