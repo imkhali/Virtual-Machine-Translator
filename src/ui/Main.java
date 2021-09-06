@@ -1,7 +1,6 @@
 package ui;
 
 import model.CodeWriter;
-import model.CommandType;
 import model.Parser;
 
 import java.io.File;
@@ -48,24 +47,6 @@ public class Main {
     }
 
     private static void handleFile(String path) {
-        parser = new Parser(path);
-        codeWriter.setFileName(path);
-
-        while (parser.hasMoreCommands()) {
-            parser.advance();
-            switch (parser.getCurrentCommandType()) {
-                case C_ARITHMETIC -> codeWriter.writeArithmetic(parser.getCurrentCommandArg1());
-                case C_PUSH -> codeWriter.writePushPop(CommandType.C_PUSH, parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
-                case C_POP -> codeWriter.writePushPop(CommandType.C_POP, parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
-                case C_LABEL -> codeWriter.writeLabel(parser.getCurrentCommandArg1());
-                case C_GOTO -> codeWriter.writeGoto(parser.getCurrentCommandArg1());
-                case C_IF -> codeWriter.writeIF(parser.getCurrentCommandArg1()); // if first stack pop is true (previous command)
-                case C_CALL -> codeWriter.writeCall(parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
-                case C_FUNCTION -> codeWriter.writeFunction(parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
-                case C_RETURN -> codeWriter.writeReturn();
-                default -> throw new RuntimeException("Got wrong command type");
-            }
-        }
-        codeWriter.close();
+        codeWriter.process(path);
     }
 }

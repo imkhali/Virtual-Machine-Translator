@@ -9,23 +9,40 @@ import static java.lang.System.getProperty;
 
 public class CodeWriter {
     public static final String LINE_SEPARATOR = getProperty("line.separator");
-
     public static final int THIS = 3;
     public static final int TEMP = 5;
-
     public static int currentLabelIndex = 0;
-
     private final String asmFilePath;
-
+    private final List<String> bufferCommands;
+    private Parser parser;
     private String currentVMFilePath;
     private String fileBaseName;
     private String labelPrefix = "";
 
-    private final List<String> bufferCommands;
-
     public CodeWriter(String asmFile) {
         this.asmFilePath = asmFile;
         this.bufferCommands = new LinkedList<>();
+    }
+
+    public void process(String path) {
+        parser = new Parser(path);
+        this.setFileName(path);
+        while (parser.hasMoreCommands()) {
+            parser.advance();
+            switch (parser.getCurrentCommandType()) {
+                case C_ARITHMETIC -> writeArithmetic(parser.getCurrentCommandArg1());
+                case C_PUSH -> writePushPop(CommandType.C_PUSH, parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
+                case C_POP -> writePushPop(CommandType.C_POP, parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
+                case C_LABEL -> writeLabel(parser.getCurrentCommandArg1());
+                case C_GOTO -> writeGoto(parser.getCurrentCommandArg1());
+                case C_IF -> writeIF(parser.getCurrentCommandArg1()); // if first stack pop is true (previous command)
+                case C_CALL -> writeCall(parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
+                case C_FUNCTION -> writeFunction(parser.getCurrentCommandArg1(), parser.getCurrentCommandArg2());
+                case C_RETURN -> writeReturn();
+                default -> throw new RuntimeException("Got wrong command type");
+            }
+        }
+        close();
     }
 
     public String getAsmFilePath() {
