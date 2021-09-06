@@ -14,7 +14,6 @@ public class CodeWriter {
     public static int currentLabelIndex = 0;
     private final String asmFilePath;
     private final List<String> bufferCommands;
-    private Parser parser;
     private String currentVMFilePath;
     private String fileBaseName;
     private String labelPrefix = "";
@@ -25,7 +24,7 @@ public class CodeWriter {
     }
 
     public void process(String path) {
-        parser = new Parser(path);
+        Parser parser = new Parser(path);
         this.setFileName(path);
         while (parser.hasMoreCommands()) {
             parser.advance();
@@ -42,7 +41,7 @@ public class CodeWriter {
                 default -> throw new RuntimeException("Got wrong command type");
             }
         }
-        close();
+        writeToAsmFile();
     }
 
     public String getAsmFilePath() {
@@ -65,16 +64,11 @@ public class CodeWriter {
             for (String asmStatement : this.bufferCommands)
                 asmFile.write(asmStatement + LINE_SEPARATOR);
             asmFile.close();
-            System.out.println("Successfully wrote to the file. " + asmFilePath);
+            System.out.println("Successfully handled " + currentVMFilePath);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-
-    }
-
-    public void close() {
-        writeToAsmFile();
     }
 
     // write the assembly instructions for bootstrap code
@@ -310,8 +304,8 @@ public class CodeWriter {
 
         bufferCommands.add("// call " + functionName);
 
-        /**
-         * Pushing the caller state
+        /*
+          Pushing the caller state
          */
         /* push returnAddress */
         String returnAddress = getNextLabel();
@@ -325,8 +319,8 @@ public class CodeWriter {
         saveSegmentAddress("THIS");
         saveSegmentAddress("THAT");
 
-        /**
-         * Setting up for the callee
+        /*
+          Setting up for the callee
          */
         /* reposition ARG */
         bufferCommands.add("@SP");
@@ -342,8 +336,8 @@ public class CodeWriter {
         bufferCommands.add("@LCL");
         bufferCommands.add("M=D");
 
-        /**
-         * jumping to functionName
+        /*
+          jumping to functionName
          */
         /* goto functionName */
         writeGoto(functionName);
@@ -394,8 +388,8 @@ public class CodeWriter {
         bufferCommands.add("A=M");
         bufferCommands.add("M=D");
 
-        /**
-         * reposition the caller's segments (state)
+        /*
+          reposition the caller's segments (state)
          */
         /* SP = ARG + 1 */
         bufferCommands.add("@ARG");

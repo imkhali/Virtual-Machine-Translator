@@ -1,13 +1,11 @@
 package ui;
 
 import model.CodeWriter;
-import model.Parser;
 
 import java.io.File;
 import java.util.Objects;
 
 public class Main {
-    private static Parser parser;
     private static CodeWriter codeWriter;
 
     public static final String inFileExt = ".vm";
